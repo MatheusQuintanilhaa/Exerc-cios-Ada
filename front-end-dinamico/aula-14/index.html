@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .container {
+        margin: auto;
+        padding: 40px;
+        max-width: 600px;
+      }
+    </style>
+    <title>Todo Crud</title>
+  </head>
+  <body>
+    <div class="container">
+      <form id="form">
+        <input type="hidden" name="name" value="palmer" />
+        <p>
+          <label for="description">Description</label>
+          <input type="text" name="description" id="description" />
+        </p>
+        <p>
+          <label for="due_date">Done</label>
+          <input type="checkbox" name="done" checked value="true" />
+          <button type="submit">Criar Todo</button>
+        </p>
+      </form>
+      <!-- <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Done</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="body"></tbody>
+      </table> -->
+    </div>
+    <script>
+      const URL = `https://5c4a-2804-2984-9519-df00-9d72-5260-cf0c-e80a.ngrok-free.app/api/todo/matheus`;
+
+      const form = document.getElementById("form");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const data = {
+          description: form.description.value,
+          done: form.done.checked,
+        };
+
+        if (!data.description) {
+          return;
+        }
+
+        const response = await fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const todo = await response.json();
+
+        form.reset();
+
+        fetchTodos();
+      });
+
+      const fetchTodos = async () => {
+        const response = await fetch(URL, {
+          headers: {
+            "ngrok-skip-browser-warning": "1",
+          },
+        });
+        const todos = await response.json();
+        console.log({ todos });
+      };
+
+      fetchTodos();
+    </script>
+  </body>
+</html>
